@@ -1,3 +1,4 @@
+import { UserManagement } from './components/UserManagement';
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -7,6 +8,7 @@ function MainApp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [activeTab, setActiveTab] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
