@@ -1,4 +1,6 @@
 import { UserManagement } from './components/UserManagement';
+import { ModelManagement } from './components/ModelManagement';
+import { AnalyticsPanel } from './components/AnalyticsPanel';
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -8,7 +10,7 @@ function MainApp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [activeTab, setActiveTab] = useState(null);
+  const [adminTab, setAdminTab] = useState(null); // 'models', 'users', 'analytics'
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -121,7 +123,6 @@ function MainApp() {
               </button>
             </form>
 
-            {/* Toggle between Login and Register */}
             <div className="text-center mt-6">
               <button 
                 onClick={() => setIsRegistering(!isRegistering)}
@@ -152,43 +153,61 @@ function MainApp() {
             {/* Admin View */}
             {role && role.toLowerCase() === 'admin' && (
               <div className="space-y-6">
-                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                  <h2 className="text-xl font-bold mb-4 text-purple-400">👑 Admin Management Panel</h2>
-                  <p className="text-slate-300">Manage system configurations, assign councilor roles, and view overall platform metrics.</p>
+                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 flex justify-between items-center">
+                  <div>
+                    <h2 className="text-xl font-bold mb-2 text-purple-400">👑 Admin Management Panel</h2>
+                    <p className="text-slate-300">Manage system configurations, assign councilor roles, and view overall platform metrics.</p>
+                  </div>
+                  {adminTab && (
+                    <button 
+                      onClick={() => setAdminTab(null)}
+                      className="bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded text-xs transition"
+                    >
+                      🔙 Back to Overview
+                    </button>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <h3 className="font-bold text-cyan-400 mb-2">📦 Model Management</h3>
-                    <p className="text-sm text-slate-400 mb-4">Add, edit, or remove 3D models from the store catalog.</p>
-                    <button 
-                      onClick={() => alert("Model Management panel clicked!")}
-                      className="w-full bg-cyan-600 hover:bg-cyan-700 py-2 rounded text-sm font-semibold transition"
-                    >
-                      Manage Models
-                    </button>
+                {!adminTab ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                      <h3 className="font-bold text-cyan-400 mb-2">📦 Model Management</h3>
+                      <p className="text-sm text-slate-400 mb-4">Add, edit, or remove 3D models from the store catalog.</p>
+                      <button 
+                        onClick={() => setAdminTab('models')}
+                        className="w-full bg-cyan-600 hover:bg-cyan-700 py-2 rounded text-sm font-semibold transition"
+                      >
+                        Manage Models
+                      </button>
+                    </div>
+                    <div className="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                      <h3 className="font-bold text-amber-400 mb-2">👥 User Roles Control</h3>
+                      <p className="text-sm text-slate-400 mb-4">Manage customer and councilor access permissions.</p>
+                      <button 
+                        onClick={() => setAdminTab('users')}
+                        className="w-full bg-amber-600 hover:bg-amber-700 py-2 rounded text-sm font-semibold transition"
+                      >
+                        Manage Users
+                      </button>
+                    </div>
+                    <div className="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                      <h3 className="font-bold text-purple-400 mb-2">📊 System Analytics</h3>
+                      <p className="text-sm text-slate-400 mb-4">View print requests, order statuses, and platform stats.</p>
+                      <button 
+                        onClick={() => setAdminTab('analytics')}
+                        className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded text-sm font-semibold transition"
+                      >
+                        View Analytics
+                      </button>
+                    </div>
                   </div>
-                  <div className="bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <h3 className="font-bold text-amber-400 mb-2">👥 User Roles Control</h3>
-                    <p className="text-sm text-slate-400 mb-4">Manage customer and councilor access permissions.</p>
-                    <button 
-                      onClick={() => alert("User Roles control clicked!")}
-                      className="w-full bg-amber-600 hover:bg-amber-700 py-2 rounded text-sm font-semibold transition"
-                    >
-                      Manage Users
-                    </button>
-                  </div>
-                  <div className="bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <h3 className="font-bold text-purple-400 mb-2">📊 System Analytics</h3>
-                    <p className="text-sm text-slate-400 mb-4">View print requests, order statuses, and platform stats.</p>
-                    <button 
-                      onClick={() => alert("Analytics view clicked!")}
-                      className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded text-sm font-semibold transition"
-                    >
-                      View Analytics
-                    </button>
-                  </div>
-                </div>
+                ) : (
+                  <>
+                    {adminTab === 'models' && <ModelManagement />}
+                    {adminTab === 'users' && <UserManagement />}
+                    {adminTab === 'analytics' && <AnalyticsPanel />}
+                  </>
+                )}
               </div>
             )}
           </div>

@@ -55,3 +55,13 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+try {
+  const result = await signInWithPopup(auth, googleProvider);
+  // User logged in successfully
+} catch (error) {
+  if (error.code === 'auth/popup-closed-by-user') {
+    console.log("ইউজার লগইন পপ-আপ উইন্ডোটি বন্ধ করে দিয়েছেন।");
+  } else {
+    console.error("লগইন এরর:", error);
+  }
+}
